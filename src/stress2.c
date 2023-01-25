@@ -608,10 +608,16 @@ static int stress_read(void)
 
 	list_for_each_entry(stress_metric, &stress_environment_g.se_metric_head,
 			    sm_metric_linkage) {
-		se_commit_number += stress_metric->sm_commit_number,
+		se_commit_number += stress_metric->sm_commit_number;
 		stress_metric->sm_read_number++;
 	}
 
+        for (int i = 0 ; i < stress_environment_g.se_thread_number; i++) {
+            data = &stress_environment_g.se_thread_datas[i];
+            for (int j = 0; j < stress_environment_g.se_metric_number; j++) {
+                data->std_stress_metrics[j].sm_read_number++;
+            }
+        }
 	ERROR("stress2: time: %.5f for %d commits with %d threads, %.5f commits/second",
 	      realtime, se_commit_number, stress_environment_g.se_thread_number,
 	      se_commit_number / realtime);
