@@ -208,6 +208,7 @@ static int execute_remote_processes(LIBSSH2_SESSION *session,
 	const char numfds = 1;
 	struct pollfd pfds[numfds];
 	int len;
+  int new_len;
 	int retry = 0;
 	int count = 0;
 
@@ -261,14 +262,20 @@ static int execute_remote_processes(LIBSSH2_SESSION *session,
 			memset(buffer, 0, sizeof(buffer));
 			rc = libssh2_channel_read(channel, buffer,
 						  sizeof(buffer));
-			if (rc > 0 && nbytes + rc >= *result_len) {
-				*result_len += *result_len;
-				p = realloc(*result, *result_len);
-				if (!p)
-					return -ENOMEM;
-				*result = p;
-			}
 			if (rc > 0) {
+				new_len = *result_len;
+				while (nbytes + rc >= new_len) {
+					new_len *= 2;
+				}
+				if (new_len != *result_len) {
+					p = realloc(*result, *result_len);
+					if (!p)
+						return -ENOMEM;
+					*result = p;
+					memset((char *)*result + *result_len,
+					       0, new_len - *result_len);
+					*result_len = new_len;
+				}
 				memcpy((char *)(*result) + nbytes,
 					buffer, rc);
 				nbytes += rc;
@@ -1019,6 +1026,8 @@ static int ssh_read_file(const char *path, char **buf, ssize_t *data_size,
 			strerror(errno));
 		return ret;
 	}
+	/* The caller assumes the message is terminated by '\0'. */
+	receive_buf[ret] = '\0';
 	/* Step4 Filter results */
 	if (!strncmp(receive_buf, ERROR_FORMAT, strlen(ERROR_FORMAT))) {
 		FERROR("ssh plugin: %s", receive_buf);
