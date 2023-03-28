@@ -268,7 +268,7 @@ static int execute_remote_processes(LIBSSH2_SESSION *session,
 					new_len *= 2;
 				}
 				if (new_len != *result_len) {
-					p = realloc(*result, *result_len);
+					p = realloc(*result, new_len);
 					if (!p)
 						return -ENOMEM;
 					*result = p;
@@ -775,7 +775,7 @@ static int ssh_handle_request(struct ssh_configs *ssh_configs, int sock,
 			/* connectio have been broken */
 			if (rc == -EIDRM)
 				break;
-			rc =  strlen(ERROR_FORMAT);
+			rc = strlen(ERROR_FORMAT);
 		}
 
 		/* Step 4: return results to collectd */
@@ -783,9 +783,9 @@ static int ssh_handle_request(struct ssh_configs *ssh_configs, int sock,
 		memset(zmq_msg_data(&reply), 0, rc);
 		memcpy(zmq_msg_data(&reply), result, rc);
 #ifdef HAVE_ZMQ_NEW_VER
-		rc = zmq_msg_send(&reply, responder, 0);
+		rc = zmq_msg_send(&reply, responder, 0 /* flags */);
 #else
-		rc = zmq_send(responder, &reply, 0);
+		rc = zmq_send(responder, &reply, 0 /* flags */);
 #endif
 		zmq_msg_close(&reply);
 		if (rc < 0) {
