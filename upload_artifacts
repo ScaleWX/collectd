@@ -1,0 +1,23 @@
+#!/bin/sh
+
+echo "Uploading release artifacts to GitHub..."
+token=$1
+
+# Get the latest release
+release=$(curl -sL -H "Authorization:token $token" https://api.github.com/repos/$2/releases/latest)
+
+# Extract the id of the release from the creation response
+id=$(echo "$release" | sed -n -e 's/"id":\ \([0-9]\+\),/\1/p' | head -n 1 | sed 's/[[:blank:]]//g')
+if [ "$3" = "el8" ]; then
+  tag_name=$(echo "$release" | sed -n -e 's/"tag_name":\ "\([[:graph:]]\+\)",/\1/p' | head -n 1 | sed 's/[[:blank:]]//g')
+  git checkout refs/tags/$tag_name
+  ./build.sh && ./configure && make rpms
+fi
+
+# Upload the artifacts
+COLLECTD=$(basename `find . -type f -regextype posix-egrep -regex "\./collectd-[0-9].+\.rpm" -print`)
+FILEDATA=$(basename `find . -type f -regextype posix-egrep -regex "\./collectd-filedata.+\.rpm" -print`)
+SSH=$(basename `find . -type f -regextype posix-egrep -regex "\./collectd-ssh.+\.rpm" -print`)
+curl -XPOST -H "Authorization:token $token" -H "Content-Type:application/octet-stream" --data-binary @$COLLECTD https://uploads.github.com/repos/$2/releases/$id/assets?name=$COLLECTD
+curl -XPOST -H "Authorization:token $token" -H "Content-Type:application/octet-stream" --data-binary @$FILEDATA https://uploads.github.com/repos/$2/releases/$id/assets?name=$FILEDATA
+curl -XPOST -H "Authorization:token $token" -H "Content-Type:application/octet-stream" --data-binary @$SSH https://uploads.github.com/repos/$2/releases/$id/assets?name=$SSH
