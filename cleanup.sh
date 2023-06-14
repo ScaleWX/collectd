@@ -35,13 +35,13 @@ else
   echo 'collectd-rrdtool is not installed'
 fi
 
-echo 'checking if xml_definition is installed'
-rpm -qa|grep "xml_definition" 1>/dev/null
+echo 'checking if filedata_definition is installed'
+rpm -qa|grep "filedata_definition" 1>/dev/null
 if [ $? = 0 ] ; then
-  echo 'uninstalling xml_definition'
-  sudo rpm -e xml_definition
+  echo 'uninstalling filedata_definition'
+  sudo rpm -e filedata_definition
 else
-  echo 'xml_definition is not installed'
+  echo 'filedata_definition is not installed'
 fi
 
 echo 'checking if collectd is installed'
