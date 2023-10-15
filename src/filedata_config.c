@@ -529,10 +529,7 @@ static inline char* filedata_check_extra_tags(char *extra_tags)
 		n = MAX_TSDB_TAGS_LENGTH - strlen(ret_p) - 1;
 		if (ret == 0) {
 			if (n > strlen(key_point)) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-overflow"
-				strncat(ret_p, key_point, strlen(key_point));
-#pragma GCC diagnostic pop
+				strncat(ret_p, key_point, MAX_TSDB_TAGS_LENGTH - strlen(ret_p) - 1);
 			} else {
 				FERROR("Common: ignore max buffer");
 				break;
