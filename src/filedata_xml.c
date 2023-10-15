@@ -510,6 +510,7 @@ filedata_xml_option_parse(struct filedata_field_type *field, xmlNode *node)
 			}
 			value = (char*)xmlNodeGetContent(tmp);
 			strncpy(string, value, 1024);
+			string[sizeof(string) - 1] = '\0';
 			xmlFree(value);
 			inited = 1;
 		} else {

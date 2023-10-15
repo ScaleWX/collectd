@@ -26,10 +26,12 @@ pipeline {
             agent { label 'el7' }
             steps {
                 dir(COLLECTD_DIR) {
+		    sh 'rm -rf *'
                     checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/*']], extensions: [], userRemoteConfigs: [[credentialsId: CREDENTIALS_ID, url: COLLECTD_REPO]]])
                     sh './build.sh && ./configure && make rpms'
                 }
                 dir(XML_DEFINITION_DIR) {
+		    sh 'rm -rf *'
                     checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/*']], extensions: [], userRemoteConfigs: [[credentialsId: CREDENTIALS_ID, url: XML_DEFINITION_REPO]]])
                     sh './bootstrap.sh && ./configure && make rpm'
                 }
@@ -77,7 +79,7 @@ pipeline {
                     sh './initdb.sh'
                 }
                 dir(WORK_DIR) {
-                    sh 'python verify_metrics.py -d /var/lib/jenkins/work -f /etc/filedata/exa-5.2.7.xml -t tests.xml -c ./collectd.conf -w yes'
+                    sh 'python verify_metrics.py -d /var/lib/jenkins/work -f /etc/filedata/exa-5.2.7.xml -t tests.xml -c ./collectd.conf -w yes -i 30'
                 }
                 dir(WORK_DIR) {
                     sh './check_tsdb_test_results.sh'
@@ -93,7 +95,7 @@ pipeline {
         stage('Release') {
             agent { label 'el7' }
             environment {
-                GITHUB_TOKEN='<TOKEN>'
+            GITHUB_TOKEN='<TOKEN>'
             }
             steps {
                 dir(COLLECTD_DIR) {
@@ -108,8 +110,22 @@ pipeline {
             }
             steps {
                 dir(COLLECTD_DIR) {
+		    sh 'rm -rf *'
                     checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/*']], extensions: [], userRemoteConfigs: [[credentialsId: CREDENTIALS_ID, url: COLLECTD_REPO]]])
                     sh './upload_artifacts $GITHUB_TOKEN ScaleWX/collectd el8'
+                }
+            }
+        }
+        stage('Upload el9 Packages') {
+            agent { label 'el9' }
+            environment {
+                GITHUB_TOKEN='<TOKEN>'
+            }
+            steps {
+                dir(COLLECTD_DIR) {
+		    sh 'rm -rf *'
+                    checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/*']], extensions: [], userRemoteConfigs: [[credentialsId: CREDENTIALS_ID, url: COLLECTD_REPO]]])
+                    sh './upload_artifacts $GITHUB_TOKEN ScaleWX/collectd el9'
                 }
             }
         }

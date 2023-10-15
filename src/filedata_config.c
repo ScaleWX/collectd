@@ -529,7 +529,7 @@ static inline char* filedata_check_extra_tags(char *extra_tags)
 		n = MAX_TSDB_TAGS_LENGTH - strlen(ret_p) - 1;
 		if (ret == 0) {
 			if (n > strlen(key_point)) {
-				strncat(ret_p, key_point, strlen(key_point));
+				strncat(ret_p, key_point, MAX_TSDB_TAGS_LENGTH - strlen(ret_p) - 1);
 			} else {
 				FERROR("Common: ignore max buffer");
 				break;
@@ -1133,6 +1133,7 @@ static int filedata_config_option(const oconfig_item_t *ci,
 				break;
 			}
 			strncpy(string, value, 1024);
+			string[sizeof(string) - 1] = '\0';
 			free(value);
 			inited = 1;
 		} else {
