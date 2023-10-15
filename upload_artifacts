@@ -12,6 +12,12 @@ if [ "$3" = "el8" ]; then
   tag_name=$(echo "$release" | sed -n -e 's/"tag_name":\ "\([[:graph:]]\+\)",/\1/p' | head -n 1 | sed 's/[[:blank:]]//g')
   git checkout refs/tags/$tag_name
   ./build.sh && ./configure && make rpms
+elif [ "$3" = "el9" ]; then
+  tag_name=$(echo "$release" | sed -n -e 's/"tag_name":\ "\([[:graph:]]\+\)",/\1/p' | head -n 1 | sed 's/[[:blank:]]//g')
+  git checkout refs/tags/$tag_name
+  sed -i s/PyEval_InitThreads/Py_Initialize/ src/python.c
+  sed -i s/usmDESPrivProtocol/usmAESPrivProtocol/ src/snmp.c
+  ./build.sh && ./configure && make rpms
 fi
 
 # Upload the artifacts
