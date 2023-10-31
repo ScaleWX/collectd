@@ -1,3 +1,9 @@
+collectd (5.12.0.brl7) unstable; urgency=medium
+
+  * Support deb package building
+
+ -- Katsuhiko Ono <kono@ddn.com>  Tue, 31 Oct 2023 10:54:00 +0900
+
 collectd (5.12.0-10ubuntu0.1) jammy; urgency=medium
 
   * Rebuild to get it back into the Archive as it was removed as

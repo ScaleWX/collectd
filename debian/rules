@@ -119,6 +119,7 @@ confflags += --disable-nut
 # ganglia FTBS, disable it for now
 # see #964399
 confflags += --disable-gmond
+confflags += --disable-ganglia
 
 
 # owfs ftbfs
