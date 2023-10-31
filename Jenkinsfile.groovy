@@ -129,5 +129,18 @@ pipeline {
                 }
             }
         }
+	stage('Upload Ubuntu Packages') {
+            agent { label 'ubuntu' }
+            environment {
+                GITHUB_TOKEN='<TOKEN>'
+            }
+            steps {
+                dir(COLLECTD_DIR) {
+		    sh 'rm -rf *'
+                    checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/*']], extensions: [], userRemoteConfigs: [[credentialsId: CREDENTIALS_ID, url: COLLECTD_REPO]]])
+                    sh './upload_artifacts $GITHUB_TOKEN ScaleWX/collectd ubuntu'
+                }
+            }
+        }
     }
 }

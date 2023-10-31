@@ -2,6 +2,7 @@
 
 echo "Uploading release artifacts to GitHub..."
 token=$1
+tag_name=""
 
 # Get the latest release
 release=$(curl -sL -H "Authorization:token $token" https://api.github.com/repos/$2/releases/latest)
@@ -18,12 +19,36 @@ elif [ "$3" = "el9" ]; then
   sed -i s/PyEval_InitThreads/Py_Initialize/ src/python.c
   sed -i s/usmDESPrivProtocol/usmAESPrivProtocol/ src/snmp.c
   ./build.sh && ./configure && make rpms
+elif [ "$3" = "ubuntu" ]; then
+  tag_name=$(echo "$release" | sed -n -e 's/"tag_name":\ "\([[:graph:]]\+\)",/\1/p' | head -n 1 | sed 's/[[:blank:]]//g')
+  git checkout refs/tags/$tag_name
+  tar Jcvf ../{$tag_name}.orig.tar.xz .
+  debuild -us -uc
 fi
 
+COLLECTD=""
+FILEDATA=""
+SSH=""
+
 # Upload the artifacts
-COLLECTD=$(basename `find . -type f -regextype posix-egrep -regex "\./collectd-[0-9].+\.rpm" -print`)
-FILEDATA=$(basename `find . -type f -regextype posix-egrep -regex "\./collectd-filedata.+\.rpm" -print`)
-SSH=$(basename `find . -type f -regextype posix-egrep -regex "\./collectd-ssh.+\.rpm" -print`)
-curl -XPOST -H "Authorization:token $token" -H "Content-Type:application/octet-stream" --data-binary @$COLLECTD https://uploads.github.com/repos/$2/releases/$id/assets?name=$COLLECTD
-curl -XPOST -H "Authorization:token $token" -H "Content-Type:application/octet-stream" --data-binary @$FILEDATA https://uploads.github.com/repos/$2/releases/$id/assets?name=$FILEDATA
-curl -XPOST -H "Authorization:token $token" -H "Content-Type:application/octet-stream" --data-binary @$SSH https://uploads.github.com/repos/$2/releases/$id/assets?name=$SSH
+if [ "$3" = "ubuntu" ]; then
+    COLLECTD=$(find .. -type f -regextype posix-egrep -regex "\.\./collectd-core_${tag_name}.+\.deb" -print)
+    mv ${COLLECTD} .
+    COLLECTD=$(basename ${COLLECTD})
+else
+    COLLECTD=$(basename `find . -type f -regextype posix-egrep -regex "\./collectd-[0-9].+\.rpm" -print`)
+    FILEDATA=$(basename `find . -type f -regextype posix-egrep -regex "\./collectd-filedata.+\.rpm" -print`)
+    SSH=$(basename `find . -type f -regextype posix-egrep -regex "\./collectd-ssh.+\.rpm" -print`)
+fi
+
+if [ -n "$COLLECTD"]; then
+    curl -XPOST -H "Authorization:token $token" -H "Content-Type:application/octet-stream" --data-binary @$COLLECTD https://uploads.github.com/repos/$2/releases/$id/assets?name=$COLLECTD
+fi
+
+if [ -n "$FILEDATA"]; then
+    curl -XPOST -H "Authorization:token $token" -H "Content-Type:application/octet-stream" --data-binary @$FILEDATA https://uploads.github.com/repos/$2/releases/$id/assets?name=$FILEDATA
+fi
+
+if [ -n "$SSH"]; then
+    curl -XPOST -H "Authorization:token $token" -H "Content-Type:application/octet-stream" --data-binary @$SSH https://uploads.github.com/repos/$2/releases/$id/assets?name=$SSH
+fi
