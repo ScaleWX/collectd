@@ -1,0 +1,6 @@
+---
+Name: collectd
+Bug-Database: https://github.com/collectd/collectd/issues
+Bug-Submit: https://github.com/collectd/collectd/issues/new
+Repository: https://github.com/collectd/collectd.git
+Repository-Browse: https://github.com/collectd/collectd

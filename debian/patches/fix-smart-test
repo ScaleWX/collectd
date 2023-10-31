@@ -1,0 +1,22 @@
+Index: collectd/src/smart_test.c
+===================================================================
+--- collectd.orig/src/smart_test.c
++++ collectd/src/smart_test.c
+@@ -30,6 +30,8 @@
+ #include "smart.c"
+ #include "testing.h"
+ 
++
++
+ #define INTEL_VID 0x8086
+ 
+ int VENDOR_ID = INTEL_VID;
+@@ -46,7 +48,7 @@ int ioctl(int __fd, unsigned long int __
+   if (admin_cmd->opcode == NVME_ADMIN_IDENTIFY) {
+     // ioctl asked about vid
+     __le16 *vid = (__le16 *)addr;
+-    *vid = VENDOR_ID;
++    *vid = htole16(VENDOR_ID);
+     return 0;
+   } else if (admin_cmd->opcode == NVME_ADMIN_GET_LOG_PAGE) {
+     // ioctl asked about smart attributes
