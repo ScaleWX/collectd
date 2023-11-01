@@ -22,7 +22,8 @@ elif [ "$3" = "el9" ]; then
 elif [ "$3" = "ubuntu" ]; then
   tag_name=$(echo "$release" | sed -n -e 's/"tag_name":\ "\([[:graph:]]\+\)",/\1/p' | head -n 1 | sed 's/[[:blank:]]//g')
   git checkout refs/tags/$tag_name
-  tar Jcvf ../${tag_name/-/_}.orig.tar.xz .
+  src_prefix="collectd_${tag_name#*-}"
+  tar Jcvf ../${src_prefix}.orig.tar.xz .
   debuild -us -uc
 fi
 
@@ -32,7 +33,8 @@ SSH=""
 
 # Upload the artifacts
 if [ "$3" = "ubuntu" ]; then
-    COLLECTD=$(find .. -type f -regextype posix-egrep -regex "\.\./${tag_name/collectd-/collectd-core_}.+\.deb" -print)
+    pkg_prefix="collectd-core_${tag_name#*-}"
+    COLLECTD=$(find .. -type f -regextype posix-egrep -regex "\.\./${pkg_prefix}.+\.deb" -print)
     mv ${COLLECTD} .
     COLLECTD=$(basename ${COLLECTD})
 else
