@@ -41,14 +41,14 @@ else
     SSH=$(basename `find . -type f -regextype posix-egrep -regex "\./collectd-ssh.+\.rpm" -print`)
 fi
 
-if [ -n "$COLLECTD"]; then
+if [ -n "$COLLECTD" ]; then
     curl -XPOST -H "Authorization:token $token" -H "Content-Type:application/octet-stream" --data-binary @$COLLECTD https://uploads.github.com/repos/$2/releases/$id/assets?name=$COLLECTD
 fi
 
-if [ -n "$FILEDATA"]; then
+if [ -n "$FILEDATA" ]; then
     curl -XPOST -H "Authorization:token $token" -H "Content-Type:application/octet-stream" --data-binary @$FILEDATA https://uploads.github.com/repos/$2/releases/$id/assets?name=$FILEDATA
 fi
 
-if [ -n "$SSH"]; then
+if [ -n "$SSH" ]; then
     curl -XPOST -H "Authorization:token $token" -H "Content-Type:application/octet-stream" --data-binary @$SSH https://uploads.github.com/repos/$2/releases/$id/assets?name=$SSH
 fi
