@@ -954,7 +954,7 @@ static int _filedata_parse(struct filedata_item_type *type,
             int finish;
 
             if (fields[i].rm_so == -1) {
-                INFO("unused field %d", i);
+                FINFO("unused field %d", i);
                 continue;
             }
 
