@@ -19,6 +19,7 @@ contrib/redhat/collectd.spec
 id=$(echo "$release" | sed -n -e 's/"id":\ \([0-9]\+\),/\1/p' | head -n 1 | sed 's/[[:blank:]]//g')
 if [ "$3" = "el7" ]; then
   enable_gpu_plugin
+  make rpms
 elif [ "$3" = "el8" ]; then
   tag_name=$(echo "$release" | sed -n -e 's/"tag_name":\ "\([[:graph:]]\+\)",/\1/p' | head -n 1 | sed 's/[[:blank:]]//g')
   git checkout refs/tags/$tag_name
