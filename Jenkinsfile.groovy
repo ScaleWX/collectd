@@ -79,7 +79,7 @@ pipeline {
                     sh './initdb.sh'
                 }
                 dir(WORK_DIR) {
-                    sh 'python verify_metrics.py -d /var/lib/jenkins/work -f /etc/filedata/exa-5.2.7.xml -t tests.xml -c ./collectd.conf -w yes -i 30'
+                    sh 'python verify_metrics.py -d /var/lib/jenkins/work -f /etc/filedata/lustre-2.12.9_ddn27.xml -t tests.xml -c ./collectd.conf -w yes -i 30'
                 }
                 dir(WORK_DIR) {
                     sh './check_tsdb_test_results.sh'
