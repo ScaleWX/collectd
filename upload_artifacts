@@ -17,7 +17,9 @@ contrib/redhat/collectd.spec
 }
 # Extract the id of the release from the creation response
 id=$(echo "$release" | sed -n -e 's/"id":\ \([0-9]\+\),/\1/p' | head -n 1 | sed 's/[[:blank:]]//g')
-if [ "$3" = "el8" ]; then
+if [ "$3" = "el7" ]; then
+  enable_gpu_plugin
+elif [ "$3" = "el8" ]; then
   tag_name=$(echo "$release" | sed -n -e 's/"tag_name":\ "\([[:graph:]]\+\)",/\1/p' | head -n 1 | sed 's/[[:blank:]]//g')
   git checkout refs/tags/$tag_name
   enable_gpu_plugin

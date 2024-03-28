@@ -99,7 +99,7 @@ pipeline {
             }
             steps {
                 dir(COLLECTD_DIR) {
-                    sh './create_release $GITHUB_TOKEN LustrePerfMon-5.12.0.148 ScaleWX/collectd && ./upload_artifacts $GITHUB_TOKEN ScaleWX/collectd'
+                    sh './create_release $GITHUB_TOKEN LustrePerfMon-5.12.0.148 ScaleWX/collectd && ./upload_artifacts $GITHUB_TOKEN ScaleWX/collectd el7'
                 }
             }
         }
