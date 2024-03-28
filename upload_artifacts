@@ -32,6 +32,7 @@ elif [ "$3" = "el9" ]; then
 elif [ "$3" = "ubuntu" ]; then
   tag_name=$(echo "$release" | sed -n -e 's/"tag_name":\ "\([[:graph:]]\+\)",/\1/p' | head -n 1 | sed 's/[[:blank:]]//g')
   git checkout refs/tags/$tag_name
+  sed -i -e 's/confflags += --disable-gpu_nvidia/confflags += --with-cuda=\/usr\/local\/cuda/' debian/rules
   src_prefix="collectd_${tag_name#*-}"
   tar Jcvf ../${src_prefix}.orig.tar.xz .
   debuild -us -uc
