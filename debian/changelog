@@ -1,3 +1,9 @@
+collectd (5.12.0.brl9) unstable; urgency=medium
+
+  * Allow a non-capturing group in regexp matches in filedata plugin
+
+	-- Katsuhiko Ono <jenkins@ip-172-31-22-42.ap-northeast-1.compute.internal>  Thu, 28 Mar 2024 14:05:27 +0900
+
 collectd (5.12.0.brl8) unstable; urgency=medium
 
   * New Release Build
