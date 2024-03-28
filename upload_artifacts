@@ -7,15 +7,25 @@ tag_name=""
 # Get the latest release
 release=$(curl -sL -H "Authorization:token $token" https://api.github.com/repos/$2/releases/latest)
 
+enable_gpu_plugin () {
+sed -i -e 's/without_gpu_nvidia:0/without_gpu_nvidia:1/' \
+-e 's/BuildRequires: cuda-nvml-dev-10-1/BuildRequires: cuda-nvml-devel-12-4/' \
+-e '/%{?_with_gpu_nvidia} \\/a\
+       --with-cuda=/usr/local/cuda \\' \
+-e 's/write_gpu_nvidia/gpu_nvidia/g' \
+contrib/redhat/collectd.spec
+}
 # Extract the id of the release from the creation response
 id=$(echo "$release" | sed -n -e 's/"id":\ \([0-9]\+\),/\1/p' | head -n 1 | sed 's/[[:blank:]]//g')
 if [ "$3" = "el8" ]; then
   tag_name=$(echo "$release" | sed -n -e 's/"tag_name":\ "\([[:graph:]]\+\)",/\1/p' | head -n 1 | sed 's/[[:blank:]]//g')
   git checkout refs/tags/$tag_name
+  enable_gpu_plugin
   ./build.sh && ./configure && make rpms
 elif [ "$3" = "el9" ]; then
   tag_name=$(echo "$release" | sed -n -e 's/"tag_name":\ "\([[:graph:]]\+\)",/\1/p' | head -n 1 | sed 's/[[:blank:]]//g')
   git checkout refs/tags/$tag_name
+  enable_gpu_plugin
   sed -i s/PyEval_InitThreads/Py_Initialize/ src/python.c
   sed -i s/usmDESPrivProtocol/usmAESPrivProtocol/ src/snmp.c
   ./build.sh && ./configure && make rpms
