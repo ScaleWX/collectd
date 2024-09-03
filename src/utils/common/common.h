@@ -195,6 +195,24 @@ int strjoin(char *dst, size_t dst_len, char **fields, size_t fields_num,
  */
 int escape_slashes(char *buffer, size_t buffer_size);
 
+/*
+ * NAME
+ *   escape_hyphens
+ *
+ * DESCRIPTION
+ *   Replaces all hyphens ("-") with underscores ("_").
+ *   This function is used by wt_write_messages() of write_tsdb to escape
+ *   hyphens in case the EscapeHyphens option is set to true.
+ *
+ * PARAMETERS
+ *   `buffer'         String to be escaped.
+ *   `buffer_size'    Size of the buffer.
+ *
+ * RETURN VALUE
+ *   Returns zero upon success and a value smaller than zero upon failure.
+ */
+int escape_hyphens(char *buffer, size_t buffer_size);
+
 /**
  * NAME
  *   escape_string
