@@ -1,3 +1,10 @@
+collectd (5.12.0.brl11) unstable; urgency=medium
+
+  * Fix an issue with context search of the filedata plugin
+  * Add EscapeHyphen option to the write_tsdb plugin
+
+ -- Katsuhiko Ono <kono@ddn.com>  Mon, 09 Sep 2024 10:21:41 +0900
+
 collectd (5.12.0.brl9) unstable; urgency=medium
 
   * Allow a non-capturing group in regexp matches in filedata plugin
