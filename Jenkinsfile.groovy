@@ -14,20 +14,13 @@ pipeline {
         WORK_DIR="/var/lib/jenkins/work"
     }
     stages {
-        stage('Prepare') {
-            agent { label 'el7' }
-            steps {
-                dir(WORK_DIR) {
-                    sh './cleanup.sh'
-                }
-            }
-        }
         stage('Build') {
             agent { label 'el7' }
             steps {
                 dir(COLLECTD_DIR) {
 		    sh 'rm -rf *'
                     checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/*']], extensions: [], userRemoteConfigs: [[credentialsId: CREDENTIALS_ID, url: COLLECTD_REPO]]])
+                    sh './cleanup.sh'
                     sh './build.sh && ./configure && make rpms'
                 }
                 dir(XML_DEFINITION_DIR) {
@@ -75,13 +68,13 @@ pipeline {
         stage('Test') {
             agent { label 'el7' }
             steps {
-                dir(WORK_DIR) {
+                dir(COLLECTD_DIR) {
                     sh './initdb.sh'
                 }
                 dir(WORK_DIR) {
                     sh 'python verify_metrics.py -d /var/lib/jenkins/work -f /etc/filedata/lustre-2.12.9_ddn27.xml -t tests.xml -c ./collectd.conf -w yes -i 30'
                 }
-                dir(WORK_DIR) {
+                dir(COLLECTD_DIR) {
                     sh './check_tsdb_test_results.sh'
                 }
             }
