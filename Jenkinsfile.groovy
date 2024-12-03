@@ -18,13 +18,13 @@ pipeline {
             agent { label 'el7' }
             steps {
                 dir(COLLECTD_DIR) {
-		    sh 'rm -rf *'
+                    sh 'rm -rf *'
                     checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/*']], extensions: [], userRemoteConfigs: [[credentialsId: CREDENTIALS_ID, url: COLLECTD_REPO]]])
                     sh './cleanup.sh'
                     sh './build.sh && ./configure && make rpms'
                 }
                 dir(XML_DEFINITION_DIR) {
-		    sh 'rm -rf *'
+                    sh 'rm -rf *'
                     checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/*']], extensions: [], userRemoteConfigs: [[credentialsId: CREDENTIALS_ID, url: XML_DEFINITION_REPO]]])
                     sh './bootstrap.sh && ./configure && make rpm'
                 }
@@ -103,7 +103,7 @@ pipeline {
             }
             steps {
                 dir(COLLECTD_DIR) {
-		    sh 'rm -rf *'
+                    sh 'rm -rf *'
                     checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/*']], extensions: [], userRemoteConfigs: [[credentialsId: CREDENTIALS_ID, url: COLLECTD_REPO]]])
                     sh './upload_artifacts $GITHUB_TOKEN ScaleWX/collectd el8'
                 }
@@ -116,20 +116,20 @@ pipeline {
             }
             steps {
                 dir(COLLECTD_DIR) {
-		    sh 'rm -rf *'
+                    sh 'rm -rf *'
                     checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/*']], extensions: [], userRemoteConfigs: [[credentialsId: CREDENTIALS_ID, url: COLLECTD_REPO]]])
                     sh './upload_artifacts $GITHUB_TOKEN ScaleWX/collectd el9'
                 }
             }
         }
-	stage('Upload Ubuntu Packages') {
+        stage('Upload Ubuntu Packages') {
             agent { label 'ubuntu' }
             environment {
                 GITHUB_TOKEN='<TOKEN>'
             }
             steps {
                 dir(COLLECTD_DIR) {
-		    sh 'rm -rf *'
+                    sh 'rm -rf *'
                     checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/*']], extensions: [], userRemoteConfigs: [[credentialsId: CREDENTIALS_ID, url: COLLECTD_REPO]]])
                     sh './upload_artifacts $GITHUB_TOKEN ScaleWX/collectd ubuntu'
                 }
