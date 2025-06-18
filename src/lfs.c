@@ -16,7 +16,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * Authors:
- *   Katsuhiko Ono <kono@ddn.com>
+ *   Katsuhiko Ono <kono at ddn.com>
  **/
 
 #include <string.h>
