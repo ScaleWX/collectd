@@ -125,11 +125,6 @@ static int lfs_read(void)
 
 static int lfs_config_internal(oconfig_item_t *ci)
 {
-    ssize_t	 data_size = 0;
-    char	*data;
-    int	 i;
-    int	 ret;
-
     lfs_config_g = filedata_config(ci, NULL);
     if (lfs_config_g == NULL) {
         ERROR("failed to configure lfs");
