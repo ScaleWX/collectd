@@ -45,6 +45,7 @@ COLLECTD=""
 FILEDATA=""
 SSH=""
 GPU_NVIDIA=""
+LFS=""
 
 # Upload the artifacts
 if [ "$3" = "ubuntu" ]; then
@@ -57,6 +58,7 @@ else
     FILEDATA=$(basename `find . -type f -regextype posix-egrep -regex "\./collectd-filedata.+\.rpm" -print`)
     SSH=$(basename `find . -type f -regextype posix-egrep -regex "\./collectd-ssh.+\.rpm" -print`)
     GPU_NVIDIA=$(basename `find . -type f -regextype posix-egrep -regex "\./collectd-gpu_nvidia-[[:digit:]].+\.rpm" -print`)
+    LFS=$(basename `find . -type f -regextype posix-egrep -regex "\./collectd-lfs-[0-9].+\.rpm" -print`)
 fi
 
 if [ -n "$COLLECTD" ]; then
@@ -73,4 +75,8 @@ fi
 
 if [ -n "$GPU_NVIDIA" ]; then
     curl -XPOST -H "Authorization:token $token" -H "Content-Type:application/octet-stream" --data-binary @$GPU_NVIDIA https://uploads.github.com/repos/$2/releases/$id/assets?name=$GPU_NVIDIA
+fi
+
+if [ -n "$LFS" ]; then
+    curl -XPOST -H "Authorization:token $token" -H "Content-Type:application/octet-stream" --data-binary @$LFS https://uploads.github.com/repos/$2/releases/$id/assets?name=$LFS
 fi
