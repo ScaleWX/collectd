@@ -6722,6 +6722,7 @@ plugin_ipmi="no"
 plugin_ipstats="no"
 plugin_ipvs="no"
 plugin_irq="no"
+plugin_lfs="no"
 plugin_load="no"
 plugin_log_logstash="no"
 plugin_mcelog="no"
@@ -6842,6 +6843,7 @@ if test "x$ac_system" = "xLinux"; then
     plugin_filedata="yes"
     plugin_gpfs="yes"
     plugin_ime="yes"
+    plugin_lfs="yes"
   fi
 
   if test "x$with_libxml2" = "xyes" && test "x$with_libssh2" = "xyes" && test "x$with_libzmq" = "xyes"; then
@@ -7209,6 +7211,7 @@ AC_PLUGIN([ipstats],             [$plugin_ipstats],           [IP packet statist
 AC_PLUGIN([ipvs],                [$plugin_ipvs],              [IPVS connection statistics])
 AC_PLUGIN([irq],                 [$plugin_irq],               [IRQ statistics])
 AC_PLUGIN([java],                [$with_java],                [Embed the Java Virtual Machine])
+AC_PLUGIN([lfs],                 [$plugin_lfs],               [Lustre lfs statistic])
 AC_PLUGIN([load],                [$plugin_load],              [System load])
 AC_PLUGIN([log_logstash],        [$plugin_log_logstash],      [Logstash json_event compatible logging])
 AC_PLUGIN([logfile],             [yes],                       [File logging plugin])
@@ -7664,6 +7667,7 @@ AC_MSG_RESULT([    ipstats . . . . . . . $enable_ipstats])
 AC_MSG_RESULT([    ipvs  . . . . . . . . $enable_ipvs])
 AC_MSG_RESULT([    irq . . . . . . . . . $enable_irq])
 AC_MSG_RESULT([    java  . . . . . . . . $enable_java])
+AC_MSG_RESULT([    lfs . . . . . . . . . $enable_lfs])
 AC_MSG_RESULT([    load  . . . . . . . . $enable_load])
 AC_MSG_RESULT([    logfile . . . . . . . $enable_logfile])
 AC_MSG_RESULT([    logparser . . . . . . $enable_logparser])
@@ -7794,4 +7798,3 @@ if test "x$dependency_warning" = "xyes"; then
 fi
 
 # vim: set fdm=marker sw=2 sts=2 ts=2 et :
-

@@ -181,6 +181,7 @@
 %define with_ganglia 0%{!?_without_ganglia:1}
 %define with_gpfs 0%{!?_without_gpfs:1}
 %define with_ime 0%{!?_without_ime:1}
+%define with_lfs 0%{!?_without_lfs:1}
 %define with_ssh 0%{!?_without_ssh:1}
 %define with_stress 0%{!?_without_stress:1}
 %define with_stress2 0%{!?_without_stress2:1}
@@ -1143,6 +1144,15 @@ Group:		System Environment/Daemons
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 %description ime
 IME plugin for collectd.
+%endif
+
+%if %{with_lfs}
+%package lfs
+Summary:	Lustre lfs plugin for collectd
+Group:		System Environment/Daemons
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+%description lfs
+Lustre lfs plugin for collectd.
 %endif
 
 %if %{with_ssh}
@@ -2183,6 +2193,12 @@ The zabbix plugin send key and value to zabbix server
 %define _with_ime --disable-ime
 %endif
 
+%if %{with_lfs}
+%define _with_lfs --enable-lfs
+%else
+%define _with_lfs --disable-lfs
+%endif
+
 %if %{with_filedata}
 %define _with_filedata --enable-filedata
 %else
@@ -2399,6 +2415,7 @@ The zabbix plugin send key and value to zabbix server
 	%{?_with_ganglia} \
 	%{?_with_gpfs} \
 	%{?_with_ime} \
+	%{?_with_lfs} \
 	%{?_with_ssh} \
 	%{?_with_stress} \
 	%{?_with_stress2} \
@@ -3186,6 +3203,11 @@ fi
 %if %{with_ime}
 %files ime
 %{_libdir}/%{name}/ime.so
+%endif
+
+%if %{with_lfs}
+%files lfs
+%{_libdir}/%{name}/lfs.so
 %endif
 
 %if %{with_ssh}

@@ -2438,6 +2438,18 @@ stress2_la_LDFLAGS = -module -avoid-version
 stress2_la_LIBADD = -lpthread
 endif
 
+if BUILD_PLUGIN_LFS
+pkglib_LTLIBRARIES += lfs.la
+lfs_la_SOURCES = src/lfs.c \
+		    src/filedata_read.c src/filedata_read.h \
+		    src/filedata_common.h src/list.h \
+		    src/filedata_xml.c src/filedata_xml.h \
+		    src/filedata_config.c src/filedata_config.h
+lfs_la_CFLAGS = $(AM_CFLAGS) $(BUILD_WITH_LIBXML2_CFLAGS)
+lfs_la_LDFLAGS = -module -avoid-version
+lfs_la_LIBADD = $(BUILD_WITH_LIBXML2_LIBS)
+endif
+
 if BUILD_PLUGIN_ZABBIX
 pkglib_LTLIBRARIES += zabbix.la
 zabbix_la_SOURCES = src/zabbix.c \

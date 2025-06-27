@@ -1,3 +1,9 @@
+collectd (5.12.0.brl12) unstable; urgency=medium
+
+  * Lustre lfs plugin support
+
+ -- Katsuhiko Ono <kono@ddn.com>  Thu, 26 Jun 2025 18:16:25 +0900
+
 collectd (5.12.0.brl11) unstable; urgency=medium
 
   * Fix an issue with context search of the filedata plugin
