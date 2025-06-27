@@ -42,7 +42,7 @@
 
 #define START_FILE_SIZE (1048576)
 #define MAX_FILE_SIZE   (1048576 * 1024)
-#define LFS_MAX_LENGTH (1024)
+#define LFS_MAX_LENGTH (1048576)
 #define LFS "/usr/bin/lfs"
 struct filedata_configs *filedata_lfs_configs;
 static int run_command(const char *cmd, char **buf, ssize_t *data_size)
