@@ -642,9 +642,10 @@ static int filedata_submit(struct filedata_submit *submit,
         }
 
         if (strlen(tsdb_tags) > 0) {
-            strncat(tsdb_tags, " ", 1);
+            strncat(tsdb_tags, " ",
+                    MAX_TSDB_TAGS_LENGTH - strlen(tsdb_tags) - 1);
             strncat(tsdb_tags, ext_tsdb_tags,
-                    MAX_TSDB_TAGS_LENGTH - 1);
+                    MAX_TSDB_TAGS_LENGTH - strlen(tsdb_tags) - 1);
         } else {
             strncpy(tsdb_tags, ext_tsdb_tags,
                     MAX_TSDB_TAGS_LENGTH - 1);
@@ -653,7 +654,8 @@ static int filedata_submit(struct filedata_submit *submit,
     n = MAX_TSDB_TAGS_LENGTH - 1 - strlen(tsdb_tags);
     if (ext_tags && n > strlen(ext_tags) + 1) {
         if (strlen(tsdb_tags) > 0)
-            strncat(tsdb_tags, " ", 1);
+            strncat(tsdb_tags, " ",
+                    MAX_TSDB_TAGS_LENGTH - strlen(tsdb_tags) - 1);
         strncat(tsdb_tags, ext_tags,
                 MAX_TSDB_TAGS_LENGTH - 1 - strlen(tsdb_tags));
     } else if (ext_tags) {

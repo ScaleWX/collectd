@@ -534,7 +534,8 @@ static inline char* filedata_check_extra_tags(char *extra_tags)
 				FERROR("Common: ignore max buffer");
 				break;
 			}
-			strncat(ret_p, " ", 1);
+			strncat(ret_p, " ",
+                                MAX_TSDB_TAGS_LENGTH - strlen(ret_p) - 1);
 		} else {
 			FERROR("Common: ignore invalid extra tag: %s",
 			       key_point);
