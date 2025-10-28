@@ -98,7 +98,7 @@ out_free:
 static int ime_read_file(const char *path, char **buf, ssize_t *data_size,
 			  void *fd_private_data)
 {
-	char cmd[IME_MAX_LENGTH];
+	char cmd[IME_MAX_LENGTH * 3];
 	int ret;
 
 	/* Prepare request command, skipping leading / */
