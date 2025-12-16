@@ -1356,16 +1356,9 @@ filedata_entry_read_directory(struct filedata_entry *entry,
 {
     struct filedata_entry *child;
     int status = 0;
-    struct stat st;
 
     assert(list_empty(&entry->fe_active_item_types));
     assert(list_empty(&entry->fe_item_types));
-
-    status = stat(path, &st);
-    if (status) {
-        INFO("failed to stat %s: %s", path, strerror(errno));
-        return 0;
-    }
 
     list_for_each_entry(child,
                         &entry->fe_active_children,
@@ -1384,6 +1377,7 @@ filedata_entry_read_constant(struct filedata_entry *entry,
 {
     char path[MAX_NAME_LENGH + 1];
     int status = 0;
+    struct stat st;
     char *filebuf;
     struct filedata_item_type *type;
     ssize_t size;
@@ -1407,6 +1401,17 @@ filedata_entry_read_constant(struct filedata_entry *entry,
     assert(entry->fe_mode == S_IFREG || entry->fe_mode == S_IFDIR);
 
     FINFO("going down to path %s", path);
+    status = stat(path, &st);
+    if (status) {
+        FINFO("failed to stat %s: %s", path, strerror(errno));
+        return 0;
+    }
+
+    if (entry->fe_mode == S_IFDIR && S_ISREG(st.st_mode)) {
+        FINFO("path: %s is not a directory, continue", path);
+        return 0;
+    }
+
     if (entry->fe_mode == S_IFREG) {
         assert(list_empty(&entry->fe_active_children));
         assert(list_empty(&entry->fe_children));
