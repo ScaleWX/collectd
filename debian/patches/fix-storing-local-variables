@@ -20,24 +20,3 @@ Index: collectd/src/capabilities.c
      return MHD_YES;
    }
    DEBUG(CAP_PLUGIN ": formatted response: %s", g_cap_json);
-Index: collectd/src/write_prometheus.c
-===================================================================
---- collectd.orig/src/write_prometheus.c
-+++ collectd/src/write_prometheus.c
-@@ -63,6 +63,7 @@ static pthread_mutex_t metrics_lock = PT
- static char *httpd_host = NULL;
- static unsigned short httpd_port = 9103;
- static struct MHD_Daemon *httpd;
-+static int mhd_cls = 42;
- 
- static cdtime_t staleness_delta = PROMETHEUS_DEFAULT_STALENESS_DELTA;
- 
-@@ -247,7 +248,7 @@ static MHD_RESULT http_handler(void *cls
-    * very specific on the issue. */
-   if (*connection_state == NULL) {
-     /* set to a random non-NULL pointer. */
--    *connection_state = &(int){42};
-+    *connection_state = &mhd_cls;
-     return MHD_YES;
-   }
- 
