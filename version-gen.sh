@@ -1,5 +1,5 @@
 #!/bin/sh
-DEFAULT_VERSION="5.12.0.brl2"
+DEFAULT_VERSION="5.12.0.brl13"
 
 if [ -d .git ]; then
 	VERSION="`git describe --abbrev=7 2> /dev/null | sed -e '/^collectd-/!d' -e 's///' -e 'y/-/./'`"
